@@ -1,20 +1,25 @@
 package com.bmworks.rabbit;
 
 import java.util.concurrent.CountDownLatch;
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Receiver {
+public class Receiver implements MessageListener {
 
-    private CountDownLatch latch = new CountDownLatch(1);
+    private String stockManagementHost;
 
-    public void receiveMessage(String message) {
-        System.out.println("Received <" + message + ">");
-        latch.countDown();
+    @Override
+    public void onMessage(Message message) {
+        if (message.getMessageProperties().getReceivedRoutingKey().equals("stock-management-up")) {
+            stockManagementHost = new String(message.getBody());
+            System.out.println(message);
+        }
     }
 
-    public CountDownLatch getLatch() {
-        return latch;
+    public String getStockManagementHost() {
+        return stockManagementHost;
     }
-
 }

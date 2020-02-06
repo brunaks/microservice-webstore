@@ -34,7 +34,7 @@ public class Main {
 
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-                                             MessageListenerAdapter listenerAdapter,
+                                             Receiver receiver,
                                              RabbitAdmin rabbitAdmin) {
 
         rabbitAdmin.declareExchange(new TopicExchange("initialization", true, false));
@@ -44,13 +44,8 @@ public class Main {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames("webstore");
-        container.setMessageListener(listenerAdapter);
+        container.setMessageListener(receiver);
         return container;
-    }
-
-    @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     public static void main(String[] args) throws InterruptedException {
