@@ -24,7 +24,7 @@ public class SalesOrderEndpoints {
         String url = "http://" + receiver.getStockManagementHost() + "/getStock?" + "productId=" + addToCartRequest.productId;
         Integer stock = restTemplate.getForObject(url, Integer.class);
         AddToCartResponse addToCartResponse = new AddToCartResponse();
-        addToCartResponse.hasEnoughInStock = true;
+        addToCartResponse.hasEnoughInStock = stock >= addToCartRequest.quantity;
         return addToCartResponse;
     }
 }
